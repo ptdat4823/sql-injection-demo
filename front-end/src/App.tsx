@@ -1,26 +1,23 @@
-import { useState } from "react";
+import { useEffect } from "react";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import Home from "./Home";
 import Login from "./Login";
 import "./App.css";
 import { Box } from "@mui/material";
+import { useAuth } from "./AuthContext";
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const { isLoggedIn } = useAuth();
+  const navigate = useNavigate();
 
-  const handleLogin = (user: string, pass: string) => {
-    setUsername(user);
-    setPassword(pass);
-    setIsLoggedIn(true);
-  };
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate("/");
+    } else {
+      navigate("/login");
+    }
+  }, [isLoggedIn, navigate]);
 
-  const handleLogout = () => {
-    setUsername("");
-    setPassword("");
-    setIsLoggedIn(false);
-  };
-  
   return (
     <Box
       sx={{
@@ -33,11 +30,10 @@ function App() {
         backgroundColor: "gray",
       }}
     >
-      {isLoggedIn ? (
-        <Home username={username} onLogout={handleLogout} />
-      ) : (
-        <Login onLogin={handleLogin} />
-      )}
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/" element={<Home />} />
+      </Routes>
     </Box>
   );
 }

@@ -8,25 +8,43 @@ import {
   Snackbar,
   Alert,
 } from "@mui/material";
+import { useAuth } from "./AuthContext";
 
-interface LoginProps {
-  onLogin: (username: string, password: string) => void;
-}
-
-const Login: React.FC<LoginProps> = ({ onLogin }) => {
+const Login: React.FC = () => {
+  const { isLoggedIn, login } = useAuth();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleLoginClick = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (username && password) {
-      if (username === "admin" && password === "password") {
-        onLogin(username, password);
+
+    if (!username || !password) {
+      setErrorMessage("Please fill in all fields.");
+      setError(true);
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:3000/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, password }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        login(data.username);
       } else {
+        const data = await response.json();
+        setErrorMessage(data.message || "Invalid username or password.");
         setError(true);
       }
-    } else {
+    } catch (error) {
+      setErrorMessage("An error occurred. Please try again later.");
       setError(true);
     }
   };
@@ -63,7 +81,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
         <Typography component="h1" variant="h2" color="black" sx={{ mb: 4 }}>
           Login
         </Typography>
-        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
+        <Box component="form" sx={{ mt: 1 }}>
           <TextField
             margin="dense"
             required
@@ -94,6 +112,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
             fullWidth
             variant="contained"
             sx={{ mt: 2, mb: 2 }}
+            onClick={handleLoginClick}
           >
             Login
           </Button>
@@ -101,7 +120,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
       </Box>
       <Snackbar open={error} autoHideDuration={3000} onClose={handleClose}>
         <Alert onClose={handleClose} severity="error" sx={{ width: "100%" }}>
-          Invalid username or password. Please try again.
+          {errorMessage}
         </Alert>
       </Snackbar>
     </Container>
