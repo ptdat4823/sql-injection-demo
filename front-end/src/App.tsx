@@ -7,16 +7,18 @@ import { Box } from "@mui/material";
 import { useAuth } from "./AuthContext";
 
 function App() {
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, login } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (isLoggedIn) {
+    const token = localStorage.getItem("token");
+    if (token) {
+      login(token);
       navigate("/");
     } else {
       navigate("/login");
     }
-  }, [isLoggedIn, navigate]);
+  }, [isLoggedIn, login, navigate]);
 
   return (
     <Box

@@ -11,7 +11,7 @@ import {
 import { useAuth } from "./AuthContext";
 
 const Login: React.FC = () => {
-  const { isLoggedIn, login } = useAuth();
+  const { login } = useAuth();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(false);
@@ -37,7 +37,7 @@ const Login: React.FC = () => {
 
       if (response.ok) {
         const data = await response.json();
-        login(data.username);
+        login(data.token);
       } else {
         const data = await response.json();
         setErrorMessage(data.message || "Invalid username or password.");

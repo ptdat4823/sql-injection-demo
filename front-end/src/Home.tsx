@@ -1,9 +1,19 @@
 import React from "react";
 import { Box, Container, Typography, Button } from "@mui/material";
 import { useAuth } from "./AuthContext";
+import { jwtDecode } from "jwt-decode";
 
 const Home: React.FC = () => {
-  const { username, logout } = useAuth();
+  const { token, logout } = useAuth();
+  let username = "";
+  if (token) {
+    try {
+      const decoded: { username: string } = jwtDecode(token);
+      username = decoded.username;
+    } catch (error) {
+      console.error("Failed to decode token:", error);
+    }
+  }
   return (
     <Container
       component="main"
