@@ -1,12 +1,19 @@
 import React from "react";
 import { Box, Container, Typography, Button } from "@mui/material";
+import { useAuth } from "./AuthContext";
+import { jwtDecode } from "jwt-decode";
 
-interface HomeProps {
-  username: string;
-  onLogout: () => void;
-}
-
-const Home: React.FC<HomeProps> = ({ username, onLogout }) => {
+const Home: React.FC = () => {
+  const { token, logout } = useAuth();
+  let username = "";
+  if (token) {
+    try {
+      const decoded: { username: string } = jwtDecode(token);
+      username = decoded.username;
+    } catch (error) {
+      console.error("Failed to decode token:", error);
+    }
+  }
   return (
     <Container
       component="main"
@@ -35,7 +42,7 @@ const Home: React.FC<HomeProps> = ({ username, onLogout }) => {
         <Typography component="h1" variant="h2" color="black" sx={{ mb: 4 }}>
           Welcome, {username}!
         </Typography>
-        <Button variant="contained" color="primary" onClick={onLogout}>
+        <Button variant="contained" color="primary" onClick={logout}>
           Logout
         </Button>
       </Box>
