@@ -182,18 +182,7 @@ const Login: React.FC = () => {
               }}
             >
               admin' --
-            </Button>
-            <Button
-              variant="outlined"
-              size="small"
-              onClick={() => {
-                setUsername("UNION SELECT 1, username, password FROM account --");
-                setPassword(" ");
-              }}
-            >
-              select accounts
-            </Button>
-            <Button
+            </Button><Button
               variant="outlined"
               size="small"
               onClick={() => {
@@ -203,6 +192,17 @@ const Login: React.FC = () => {
             >
               ' OR '1'='1
             </Button>
+            <Button
+              variant="outlined"
+              size="small"
+              onClick={() => {
+                setUsername("'; DROP TABLE users; --");
+                setPassword(" ");
+              }}
+            >
+              drop table
+            </Button>
+            
             
           </Box>
         </Box>
