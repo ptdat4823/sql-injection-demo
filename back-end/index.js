@@ -41,7 +41,41 @@ app.get("/accounts", (req, res) => {
   });
 });
 
-app.post("/login", (req, res) => {
+app.post("/insecure-login", (req, res) => {
+  const { username, password } = req.body;
+
+  if (!username || !password) {
+    return res
+      .status(400)
+      .json({ message: "Username and password are required." });
+  }
+
+  const query = `SELECT * FROM account WHERE username = '${username}'`;
+  console.log("Constructed Query:", query);
+
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error("Error fetching account data:", err);
+      return res.status(500).json({ message: "Internal server error." });
+    }
+
+    if (results.length === 0) {
+      return res.status(401).json({ message: "Invalid username or password." });
+    }
+
+    const account = results[0];
+    if (account.password === password) {
+      const token = jwt.sign({ username: account.username }, SECRET_KEY, {
+        expiresIn: "1h",
+      });
+      return res.json({ token });
+    } else {
+      return res.status(401).json({ message: "Invalid username or password." });
+    }
+  });
+});
+
+app.post("/secure-login", (req, res) => {
   const { username, password } = req.body;
 
   if (!username || !password) {
