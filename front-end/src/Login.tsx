@@ -7,15 +7,22 @@ import {
   Container,
   Snackbar,
   Alert,
+  Switch,
+  FormControlLabel,
+  IconButton,
+  InputAdornment,
 } from "@mui/material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useAuth } from "./AuthContext";
 
 const Login: React.FC = () => {
   const { login } = useAuth();
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [username, setUsername] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [error, setError] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [isSecure, setIsSecure] = useState<boolean>(true);
 
   const handleLoginClick = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,7 +34,11 @@ const Login: React.FC = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:3000/login", {
+      const endpoint = isSecure
+        ? "http://localhost:3000/secure-login"
+        : "http://localhost:3000/insecure-login";
+
+      const response = await fetch(endpoint, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -100,15 +111,50 @@ const Login: React.FC = () => {
             fullWidth
             name="password"
             label="Password"
-            type="password"
+            type={showPassword ? "text" : "password"}
             id="password"
             autoComplete="current-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    onClick={() => setShowPassword(!showPassword)}
+                    edge="end"
+                    disableFocusRipple
+                    disableRipple
+                    sx={{
+                      "&:focus": {
+                        outline: "none",
+                      },
+                    }}
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
+          <FormControlLabel
+            control={
+              <Switch
+                checked={isSecure}
+                onChange={(e) => setIsSecure(e.target.checked)}
+                color="primary"
+              />
+            }
+            label={isSecure ? "Secure Login" : "Insecure Login"}
+            sx={{
+              width: "100%",
+              display: "flex",
+              alignSelf: "flex-start",
+              my: 2,
+            }}
           />
           <Button
             type="submit"
-            size="large"
+            size="small"
             fullWidth
             variant="contained"
             sx={{ mt: 2, mb: 2 }}
@@ -116,6 +162,49 @@ const Login: React.FC = () => {
           >
             Login
           </Button>
+          <Box sx={{ display: "flex", gap: 2, mt: 2 }}>
+            <Button
+              variant="outlined"
+              size="small"
+              onClick={() => {
+                setUsername("johndoe");
+                setPassword("password123");
+              }}
+            >
+              John Doe
+            </Button>
+            <Button
+              variant="outlined"
+              size="small"
+              onClick={() => {
+                setUsername("admin' --");
+                setPassword(" ");
+              }}
+            >
+              admin' --
+            </Button><Button
+              variant="outlined"
+              size="small"
+              onClick={() => {
+                setUsername("' OR '1'='1");
+                setPassword(" ");
+              }}
+            >
+              ' OR '1'='1
+            </Button>
+            <Button
+              variant="outlined"
+              size="small"
+              onClick={() => {
+                setUsername("'; DROP TABLE users; --");
+                setPassword(" ");
+              }}
+            >
+              drop table
+            </Button>
+            
+            
+          </Box>
         </Box>
       </Box>
       <Snackbar open={error} autoHideDuration={3000} onClose={handleClose}>

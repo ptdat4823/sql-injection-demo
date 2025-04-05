@@ -28,7 +28,6 @@ app.get("/accounts", (req, res) => {
 });
 
 app.post("/login-secure", LoginSecure);
-
 app.post("/login-insecure", LoginInsecure);
 
 // Start the server
