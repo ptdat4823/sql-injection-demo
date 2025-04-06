@@ -38,7 +38,7 @@ CREATE TABLE `account` (
 
 LOCK TABLES `account` WRITE;
 /*!40000 ALTER TABLE `account` DISABLE KEYS */;
-INSERT INTO `account` VALUES (1,'John Doe','johndoe','password123'),(2,'Jane Smith','janesmith','securepass'),(3,'Alice Johnson','alicej','alice2024'),(4,'Bob Brown','bobb','bobsecure'),(5,'Charlie White','charliew','whitecharlie');
+INSERT INTO `account` VALUES (1,'John Doe','johndoe','password123'),(2,'Jane Smith','janesmith','securepass'),(3,'Alice Johnson','alicej','alice2024'),(4,'Bob Brown','bobb','bobsecure'),(5,'Charlie White','charliew','whitecharlie'),(6,'Admin','admin','adminpassword');
 /*!40000 ALTER TABLE `account` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

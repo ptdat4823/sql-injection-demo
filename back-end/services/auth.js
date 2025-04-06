@@ -12,14 +12,16 @@ export const LoginSecure = async (req, res) => {
       .status(400)
       .json({ message: "Username and password are required." });
   }
+  console.log("username", username);
+  console.log("password", password);
   const result = await queryGetLoginUserSecure(username, password);
   const { error, data, code } = result;
 
   if (error) return res.status(code).json({ message: error });
 
   if (data && data.length > 0) {
-    const token = generateToken(data);
-    return res.status(code).json({ token });
+    const token = generateToken(data[0]);
+    return res.status(code).json({ token, user: data[0] });
   }
 
   return res.status(401).json({ message: "Invalid username or password." });
@@ -40,8 +42,8 @@ export const LoginInsecure = async (req, res) => {
   if (error) return res.status(code).json({ message: error });
 
   if (data && data.length > 0) {
-    const token = generateToken(data);
-    return res.status(code).json({ token });
+    const token = generateToken(data[0]);
+    return res.status(code).json({ token, user: data[0] });
   }
 
   return res.status(401).json({ message: "Invalid username or password." });
