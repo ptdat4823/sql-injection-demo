@@ -35,8 +35,8 @@ const Login: React.FC = () => {
 
     try {
       const endpoint = isSecure
-        ? "http://localhost:3000/secure-login"
-        : "http://localhost:3000/insecure-login";
+        ? "http://localhost:3000/login-secure"
+        : "http://localhost:3000/login-insecure";
 
       const response = await fetch(endpoint, {
         method: "POST",
@@ -136,22 +136,6 @@ const Login: React.FC = () => {
               ),
             }}
           />
-          <FormControlLabel
-            control={
-              <Switch
-                checked={isSecure}
-                onChange={(e) => setIsSecure(e.target.checked)}
-                color="primary"
-              />
-            }
-            label={isSecure ? "Secure Login" : "Insecure Login"}
-            sx={{
-              width: "100%",
-              display: "flex",
-              alignSelf: "flex-start",
-              my: 2,
-            }}
-          />
           <Button
             type="submit"
             size="small"
@@ -169,41 +153,33 @@ const Login: React.FC = () => {
               onClick={() => {
                 setUsername("johndoe");
                 setPassword("password123");
+                setIsSecure(true);
               }}
             >
-              John Doe
+              John Doe Login Secure
             </Button>
             <Button
               variant="outlined"
               size="small"
               onClick={() => {
-                setUsername("admin' --");
+                setUsername("johndoe' -- ");
                 setPassword(" ");
+                setIsSecure(false);
               }}
             >
-              admin' --
-            </Button><Button
-              variant="outlined"
-              size="small"
-              onClick={() => {
-                setUsername("' OR '1'='1");
-                setPassword(" ");
-              }}
-            >
-              ' OR '1'='1
+              Hack John Doe
             </Button>
             <Button
               variant="outlined"
               size="small"
               onClick={() => {
-                setUsername("'; DROP TABLE users; --");
+                setUsername("'; DROP TABLE users; -- ");
                 setPassword(" ");
+                setIsSecure(false);
               }}
             >
               drop table
             </Button>
-            
-            
           </Box>
         </Box>
       </Box>
