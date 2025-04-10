@@ -15,12 +15,12 @@ app.use(express.json());
 app.use(cors());
 const db = GetConnection();
 
-app.get("/accounts", (req, res) => {
-  const query = "SELECT fullname, username, password FROM account";
+app.get("/users", (req, res) => {
+  const query = "SELECT fullname, username, password FROM users";
   db.query(query, (err, results) => {
     if (err) {
-      console.error("Error fetching account data:", err);
-      res.status(500).send("Error fetching account data");
+      console.error("Error fetching user data:", err);
+      res.status(500).send("Error fetching user data");
       return;
     }
     res.json(results);
