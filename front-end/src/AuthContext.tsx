@@ -1,8 +1,8 @@
 import { createContext, useState, useContext } from "react";
 
 interface AuthContextType {
-  isLoggedIn: Boolean;
-  token: String;
+  isLoggedIn: boolean;
+  token: string | null;
   login: (token: string) => void;
   logout: () => void;
 }

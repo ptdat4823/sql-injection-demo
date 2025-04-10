@@ -6,33 +6,46 @@ const db = GetConnection();
 export const queryGetLoginUserSecure = async (username, password) => {
   if (!db) return getError("Database connection failed.", 500);
 
-  const query = "SELECT * FROM account WHERE username = ? AND password = ?";
+  const query = "SELECT * FROM users WHERE username = ? AND password = ?";
 
   try {
     return await new Promise((resolve, reject) => {
       db.query(query, [username, password], (err, results) => {
         if (err) return reject(err);
-        return resolve(getResult(results, 200));
+        if (results.length === 0) {
+          return reject(getError("No user found.", 404));
+        }
+        return resolve(getResult(results[0], 200));
       });
     });
   } catch (error) {
-    return getError("Query execution failed.", 500);
+    return getError("Something went wrong. Please try again later.", 500);
   }
 };
 
 export const queryGetLoginUserInsecure = async (username, password) => {
   if (!db) return getError("Database connection failed.", 500);
 
-  const query = `SELECT * FROM account WHERE username = '${username}' AND password = '${password}'`;
-  console.log("query", query);
+  const query = `SELECT * FROM users WHERE username = '${username}' AND password = '${password}'`;
+  console.info("\n[🧨 Constructed SQL]");
+  console.log(query);
+
   try {
     return await new Promise((resolve, reject) => {
-      db.query(query, [username, password], (err, results) => {
-        if (err) return reject(err);
-        return resolve(getResult(results, 200));
+      db.query(query, (err, results) => {
+        if (err) {
+          console.error("\n[💥 SQL Error]", err.sqlMessage);
+          return reject(err);
+        }
+
+        if (results.length === 0) {
+          return reject(getError("No user found.", 404));
+        }
+
+        return resolve(getResult(results[0], 200));
       });
     });
   } catch (error) {
-    return getError("Query execution failed.", 500);
+    return getError("Something went wrong. Please try again later.", 500);
   }
 };

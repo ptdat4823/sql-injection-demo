@@ -1,18 +1,16 @@
-import React, { useState } from "react";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import {
+  Alert,
   Box,
   Button,
-  TextField,
-  Typography,
   Container,
-  Snackbar,
-  Alert,
-  Switch,
-  FormControlLabel,
   IconButton,
   InputAdornment,
+  Snackbar,
+  TextField,
+  Typography,
 } from "@mui/material";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
+import React, { useState } from "react";
 import { useAuth } from "./AuthContext";
 
 const Login: React.FC = () => {
@@ -55,6 +53,7 @@ const Login: React.FC = () => {
         setError(true);
       }
     } catch (error) {
+      console.log("Error:", error);
       setErrorMessage("An error occurred. Please try again later.");
       setError(true);
     }
@@ -151,34 +150,34 @@ const Login: React.FC = () => {
               variant="outlined"
               size="small"
               onClick={() => {
-                setUsername("johndoe");
-                setPassword("password123");
+                setUsername("admin");
+                setPassword("adminpassword");
                 setIsSecure(true);
               }}
             >
-              John Doe Login Secure
+              Admin Login Secure
             </Button>
             <Button
               variant="outlined"
               size="small"
               onClick={() => {
-                setUsername("johndoe' -- ");
-                setPassword(" ");
+                setUsername("admin' -- ");
+                setPassword("anything");
                 setIsSecure(false);
               }}
             >
-              Hack John Doe
+              Hack Admin account
             </Button>
             <Button
               variant="outlined"
               size="small"
               onClick={() => {
-                setUsername("'; DROP TABLE users; -- ");
-                setPassword(" ");
+                setUsername("'; DROP TABLE users -- ");
+                setPassword("anything");
                 setIsSecure(false);
               }}
             >
-              drop table
+              Drop table users
             </Button>
           </Box>
         </Box>
