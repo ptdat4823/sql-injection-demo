@@ -27,6 +27,7 @@ export const queryGetLoginUserInsecure = async (username, password) => {
   if (!db) return getError("Database connection failed.", 500);
 
   const query = `SELECT * FROM users WHERE username = '${username}' AND password = '${password}'`;
+
   console.info("\n[🧨 Constructed SQL]");
   console.log(query);
 
